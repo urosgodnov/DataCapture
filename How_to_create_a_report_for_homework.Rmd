@@ -1,0 +1,41 @@
+---
+title: "Something about Titanic"
+output:
+  word_document: default
+
+---
+
+###intro
+
+[Titanic](https://en.wikipedia.org/wiki/RMS_Titanic) was the iconic ship. Unfortunately she sank on a maiden voyage.
+
+###Table
+
+Below is the dataframe of surivived/non-survived passengers.
+
+```{r message=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(dplyr)
+
+t<-as.data.frame(Titanic) %>%group_by(Age,Sex,Class)%>% mutate(percentage=round(100*Freq/sum(Freq)))%>%arrange(Class, Sex,Age)
+
+print(as.data.frame(t))
+
+```
+
+
+###Chart
+
+Below is the chart of surivived/non-survived passengers.
+
+```{r message=FALSE, warning=FALSE}
+
+
+t1<-ggplot(t,aes(x=Class,y=percentage, fill=Survived))+geom_bar(stat="identity")
+
+t1<-t1+facet_grid(Sex~Age)
+
+print(t1)
+```
+
