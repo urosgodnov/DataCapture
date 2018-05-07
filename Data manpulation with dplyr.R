@@ -1,4 +1,4 @@
-packages=c("dplyr")
+packages=c("dplyr","tidyr")
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, dependencies = TRUE)
@@ -82,3 +82,18 @@ inner_join(product,manufacturer,by="ManufacturerID") %>% select(Manufacturer)  %
 inner_join(product,manufacturer,by="ManufacturerID") %>% filter(Manufacturer=="Barba") %>%
   select(Product) 
 
+
+#Pivot data
+p<-data.frame(year=sample(2005:2014,100,replace = T),month=sample(1:12,100,replace = T),
+              population=sample(14000:15000, 100, replace=T))
+
+p<-p%>%group_by(year,month)%>%summarize(pop=sum(population))%>%
+  arrange(year,month)%>%spread(month,pop)
+
+p
+
+#Unpivot data + changing data type
+un<-p%>%gather(month, pop, "1":"12")
+un<-na.omit(un)%>%mutate(month=as.integer(month))%>%arrange(year,month)
+
+un
