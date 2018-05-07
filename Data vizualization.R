@@ -1,4 +1,4 @@
-packages=c("ggplot2","ggthemes","ggThemeAssist","gridExtra","plotly")
+packages=c("ggplot2","ggthemes","ggThemeAssist","gridExtra","plotly","lattice")
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, dependencies = TRUE)
@@ -6,12 +6,33 @@ package.check <- lapply(packages, FUN = function(x) {
   }
 })
 
-######Basic object
 index$year<-as.character(index$year)
+
+##############Basic function############
+
+plot(index$year,index$pop)
+
+#lines
+plot(index$year,index$pop, type="l")
+
+#histogram
+plot(index$year,index$pop, type="h")
+
+#title and axis labels
+plot(index$year,index$pop, type="l", main="Population by year",
+     xlab="year",ylab="population")
+
+
+##############Lattice############
+data<-index[,1:2]
+dotplot(pop~year,data=data,main="Population by year",
+        xlab="year",ylab="population", pch=4)
+
+###########ggplot2#################
+######Basic object
 
 g<-ggplot(index,aes(x=year,y=pop, group=1))+geom_line()
 
-g
 
 ######Adding titles
 g<-g+ggtitle("Population by year")+xlab("Year")+ylab("Population")
