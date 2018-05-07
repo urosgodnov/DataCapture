@@ -29,6 +29,9 @@ str(m)
 ######List
 as.list(1:12)
 
+list("1","2","3")
+as.list(c("1","2","3"))
+
 #Naming list's elements
 l<-list(Monday=1,Tuesday=2,Wednesday=3)
 
