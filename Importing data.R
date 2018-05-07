@@ -24,3 +24,18 @@ package.check <- lapply(packages, FUN = function(x) {
 
 SPSS<-import(file="./Sample data files/Sample SPSS.sav")
 head(SPSS)
+
+
+######Extra quandl package############
+packages=c("Quandl")
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+
+#bitcoin
+quandldata = Quandl("BITFINEX/BTCUSD", start_date="2016-01-01")
+plot(quandldata[,1:2])
+
