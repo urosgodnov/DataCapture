@@ -146,5 +146,31 @@ pred.response <- colnames(out)[max.col(out, ties.method = c("random"))] # predic
 print(paste("Accuracy is ",1-mean(test.data$Species != pred.response)))
 
 
+##################Random forrest#####################
+packages=c("randomForest")
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
 
+rowNumbers<-c(1:nrow(iris))
+
+trainRows<- sample.split(rowNumbers,SplitRatio=0.7)
+
+train.data<-iris[trainRows,]
+test.data <-iris[!trainRows,]
+
+#model
+model <- randomForest(Species ~ Sepal.Width + Sepal.Length + Petal.Width + Petal.Length,
+               data = train.data, importance=TRUE, ntree=2000)
+
+varImpPlot(model)
+
+out<- predict(model, test.data)
+
+results <- cbind(test.data, data.frame(Predicted = out)) # predict response # actuals
+
+print(paste("Accuracy is ",1-mean(results$Species != results$Predicted)))
 
