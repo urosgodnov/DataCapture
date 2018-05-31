@@ -1,0 +1,68 @@
+# rm_main is a mandatory function, 
+# the number of arguments has to be the number of input ports (can be none)
+rm_main = function(data1)
+{
+
+library(ggplot2)
+library(dplyr)
+
+data<-data1%>%group_by(Manufacturer)%>%summarise(sales=sum(Quantity))%>%
+      arrange(desc(sales))
+
+data<-head(data,5)
+
+
+
+theme_set(theme_bw())
+
+# Plot lollipop
+
+g<-ggplot(data, aes(x=Manufacturer, y=sales)) + 
+  geom_point(size=3) + 
+  geom_segment(aes(x=Manufacturer, 
+                   xend=Manufacturer, 
+                   y=0, 
+                   yend=sales)) + 
+  labs(title="Lollipop Chart", 
+       subtitle="Cars sales", 
+       caption="source: norway (sales data)") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+ggsave(file="C:/Users/Godnov/Documents/sales_lollipop.jpeg", g)
+
+
+var<-rep(data$Manufacturer, data$sales)
+
+
+
+## Prep data (nothing to change here)
+nrows <- 10
+df <- expand.grid(y = 1:nrows, x = 1:nrows)
+categ_table <- round(table(var) * ((nrows*nrows)/(length(var))))
+categ_table
+
+df$manufacturer <- factor(rep(names(categ_table), categ_table))
+
+
+## Plot brick
+
+
+g<-ggplot(df, aes(x = x, y = y, fill = manufacturer)) + 
+  geom_tile(color = "black", size = 0.5) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), trans = 'reverse') +
+  scale_fill_brewer(palette = "Set3") +
+  labs(title="Waffle Chart", subtitle="'Manufacturer' of vehicles",
+       caption="Source: norway (sales data)") + 
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "right")
+
+
+ggsave(file="C:/Users/Godnov/Documents/sales_brick.jpeg", g)
+
+return(as.data.frame(data))    
+
+}
